@@ -20,8 +20,18 @@ export default class Search extends React.Component {
     this.refs.input.value = ''
   }
 
+  componentDidMount() {
+    // setTimeout queues task to happen after React finishes whatever render loop it's in
+    // this prevents Search Results AND regular categories from coinciding
+    // more info on this trick:
+    //   * http://stackoverflow.com/q/2723610/249801
+    //   * https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout#Late_timeouts
+    //   * https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
+    if (this.props.defaultValue) setTimeout(this.handleChange.bind(this))
+  }
+
   render() {
-    var { i18n, autoFocus } = this.props
+    var { i18n, autoFocus, defaultValue } = this.props
 
     return <div className='emoji-mart-search'>
       <input
@@ -30,6 +40,7 @@ export default class Search extends React.Component {
         onChange={this.handleChange.bind(this)}
         placeholder={i18n.search}
         autoFocus={autoFocus}
+        defaultValue={defaultValue}
       />
     </div>
   }
@@ -40,6 +51,7 @@ Search.propTypes = {
   maxResults: PropTypes.number,
   emojisToShowFilter: PropTypes.func,
   autoFocus: PropTypes.bool,
+  defaultValue: PropTypes.string,
 }
 
 Search.defaultProps = {

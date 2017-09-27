@@ -332,7 +332,7 @@ export default class Picker extends React.Component {
   }
 
   render() {
-    var { perLine, emojiSize, set, sheetSize, style, title, emoji, color, native, backgroundImageFn, emojisToShowFilter, include, exclude, autoFocus } = this.props,
+    var { perLine, emojiSize, set, sheetSize, style, title, emoji, color, native, backgroundImageFn, emojisToShowFilter, include, exclude, autoFocus, defaultValue } = this.props,
         { skin } = this.state,
         width = (perLine * (emojiSize + 12)) + 12 + 2 + measureScrollbar()
 
@@ -347,16 +347,20 @@ export default class Picker extends React.Component {
         />
       </div>
 
-      <Search
-        ref='search'
-        onSearch={this.handleSearch.bind(this)}
-        i18n={this.i18n}
-        emojisToShowFilter={emojisToShowFilter}
-        include={include}
-        exclude={exclude}
-        custom={CUSTOM_CATEGORY.emojis}
-        autoFocus={autoFocus}
-      />
+      {/* don't render Search until Categories are rendered and searchable */}
+      {this.state.firstRender ? null :
+        <Search
+          ref='search'
+          onSearch={this.handleSearch.bind(this)}
+          i18n={this.i18n}
+          emojisToShowFilter={emojisToShowFilter}
+          include={include}
+          exclude={exclude}
+          custom={CUSTOM_CATEGORY.emojis}
+          autoFocus={autoFocus}
+          defaultValue={this.state.firstRender ? undefined : defaultValue}
+        />
+      }
 
       <div ref="scroll" className='emoji-mart-scroll' onScroll={this.handleScroll.bind(this)}>
         {this.getCategories().map((category, i) => {
@@ -427,6 +431,7 @@ Picker.propTypes = {
   include: PropTypes.arrayOf(PropTypes.string),
   exclude: PropTypes.arrayOf(PropTypes.string),
   autoFocus: PropTypes.bool,
+  defaultValue: PropTypes.string,
   custom: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     short_names: PropTypes.arrayOf(PropTypes.string).isRequired,

@@ -43,6 +43,7 @@ class Example extends React.Component {
       hidden: false,
       currentEmoji: { id: '+1' },
       autoFocus: false,
+      defaultValue: '',
       include: [],
       exclude: [],
     }
@@ -68,6 +69,9 @@ class Example extends React.Component {
       } else {
         state[key] = checked
       }
+    } else if (type === 'text') {
+      var { value } = currentTarget
+      state[key] = value
     } else {
       var { value } = currentTarget
       state[key] = parseInt(value)
@@ -143,6 +147,7 @@ class Example extends React.Component {
 <br />  set<Operator>=</Operator><String>'{this.state.set}'</String>
 <br />  custom<Operator>=</Operator>&#123;<Variable>{'[…]'}</Variable>&#125;
 <br />  autoFocus<Operator>=</Operator>&#123;<Variable>{this.state.autoFocus ? 'true' : 'false'}</Variable>&#125;{this.state.autoFocus ? ' ' : ''} <input type='checkbox' data-key='autoFocus' data-mount={true} onChange={this.handleInput.bind(this)} checked={this.state.autoFocus} />
+<br />  defaultValue<Operator>=</Operator>&#123;<input data-key='defaultValue' data-mount={true} size={this.state.defaultValue.length + 1} value={this.state.defaultValue} onChange={this.handleInput.bind(this)} />&#125;
 <div style={{ opacity: this.state.exclude.length ? 0.6 : 1 }}>  include<Operator>=</Operator>&#91;
 {[0, 2, 4, 6, 8].map((i) => {
   let category1 = CATEGORIES[i],
@@ -179,6 +184,7 @@ class Example extends React.Component {
           set={this.state.set}
           custom={CUSTOM_EMOJIS}
           autoFocus={this.state.autoFocus}
+          defaultValue={this.state.defaultValue}
           include={this.state.include}
           exclude={this.state.exclude}
           onClick={(emoji) => {

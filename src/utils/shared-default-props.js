@@ -24,13 +24,16 @@ const PickerDefaultProps = {
   color: '#ae65c5',
   set: EmojiDefaultProps.set,
   skin: null,
+  gender: undefined,
   defaultSkin: EmojiDefaultProps.skin,
+  defaultGender: 0,
   native: EmojiDefaultProps.native,
   sheetSize: EmojiDefaultProps.sheetSize,
   backgroundImageFn: EmojiDefaultProps.backgroundImageFn,
   emojisToShowFilter: null,
   showPreview: true,
   showSkinTones: true,
+  showFilter: true,
   darkMode: !!(
     typeof matchMedia === 'function' &&
     matchMedia('(prefers-color-scheme: dark)').matches

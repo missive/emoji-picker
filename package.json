@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/missive/emoji-mart",
   "dependencies": {
+    "lodash": "^4.17.15",
     "prop-types": "^15.6.0"
   },
   "peerDependencies": {

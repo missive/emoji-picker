@@ -45,6 +45,7 @@ import { Picker } from 'emoji-mart'
 | **sheetSize** | | `64` | The emoji [sheet size](#sheet-sizes): `16, 20, 32, 64` |
 | **backgroundImageFn** | | ```((set, sheetSize) => …)``` | A Fn that returns that image sheet to use for emojis. Useful for avoiding a request if you have the sheet locally. |
 | **emojisToShowFilter** | | ```((emoji) => true)``` | A Fn to choose whether an emoji should be displayed or not |
+| **showFilter** | | `true` | Display filter section below search |
 | **showPreview** | | `true` | Display preview section |
 | **showSkinTones** | | `true` | Display skin tones picker. Disable both this and `showPreview` to remove the footer entirely. |
 | **emojiTooltip** | | `false` | Show emojis short name when hovering (title) |
@@ -388,6 +389,13 @@ The only emoji picker that returns emojis when searching for emoticons.
 For better results, **Emoji Mart** split search into words and only returns results matching both terms.
 
 <img width="338" alt="high-five" src="https://user-images.githubusercontent.com/436043/32532573-1f4a9d1e-c400-11e7-8656-921bc6c09732.png">
+
+#### Filter by gender and skin tone
+For easier access to "people"-emojis, **Emoji Mart** enables filtering by gender instead of showing up to three genders per emoji (male, female, unspecified).
+
+<img width="338" alt="gender-filter" src="https://user-images.githubusercontent.com/7772659/71893477-16527680-314c-11ea-96e6-a34942fd28ae.png
+">
+
 
 ### Fully customizable
 #### Anchors color, title and default emoji

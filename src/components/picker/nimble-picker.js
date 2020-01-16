@@ -9,15 +9,18 @@ import frequently from '../../utils/frequently'
 import { deepMerge, measureScrollbar, getSanitizedData } from '../../utils'
 import { uncompress } from '../../utils/data'
 import { PickerPropTypes } from '../../utils/shared-props'
+import genderFilters from '../../utils/gender'
 
 import Anchors from '../anchors'
 import Category from '../category'
 import Preview from '../preview'
 import Search from '../search'
+import Filter from '../filter'
 import { PickerDefaultProps } from '../../utils/shared-default-props'
 
 const I18N = {
   search: 'Search',
+  filter: 'Filter',
   clear: 'Clear', // Accessible label on "clear" button
   notfound: 'No Emoji Found',
   skintext: 'Choose your default skin tone',
@@ -68,6 +71,7 @@ export default class NimblePicker extends React.PureComponent {
     this.icons = deepMerge(icons, props.icons)
     this.state = {
       skin: props.skin || store.get('skin') || props.defaultSkin,
+      gender: props.gender || store.get('gender') || props.defaultGender,
       firstRender: true,
     }
 
@@ -197,6 +201,7 @@ export default class NimblePicker extends React.PureComponent {
     this.handleEmojiSelect = this.handleEmojiSelect.bind(this)
     this.setPreviewRef = this.setPreviewRef.bind(this)
     this.handleSkinChange = this.handleSkinChange.bind(this)
+    this.handleGenderChange = this.handleGenderChange.bind(this)
     this.handleKeyDown = this.handleKeyDown.bind(this)
   }
 
@@ -212,7 +217,17 @@ export default class NimblePicker extends React.PureComponent {
         skin: props.defaultSkin,
       }
     }
-    return state
+    if (props.gender) {
+      return {
+        ...state,
+        gender: props.gender,
+      }
+    } else if (props.defaultGender && !store.get('gender')) {
+      return {
+        ...state,
+        gender: props.defaultGender,
+      }
+    }
   }
 
   componentDidMount() {
@@ -421,6 +436,18 @@ export default class NimblePicker extends React.PureComponent {
     }
   }
 
+  handleGenderChange(gender) {
+    // console.log('gender changed', gender)
+
+    var newState = { gender: gender }
+    const { onGenderChange } = this.props
+
+    this.setState(newState)
+    store.update(newState)
+
+    onGenderChange(gender)
+  }
+
   handleSkinChange(skin) {
     var newState = { skin: skin },
       { onSkinChange } = this.props
@@ -528,9 +555,10 @@ export default class NimblePicker extends React.PureComponent {
         skinEmoji,
         notFound,
         notFoundEmoji,
+        showFilter,
         darkMode,
       } = this.props,
-      { skin } = this.state,
+      { skin, gender } = this.state,
       width = perLine * (emojiSize + 12) + 12 + 2 + measureScrollbar()
 
     return (
@@ -564,6 +592,29 @@ export default class NimblePicker extends React.PureComponent {
           autoFocus={autoFocus}
         />
 
+        {showFilter && (
+          <Filter
+            ref={this.setSearchRef}
+            data={this.data}
+            i18n={this.i18n}
+            skinsProps={{
+              skin: skin,
+              onChange: this.handleSkinChange,
+              skinEmoji: skinEmoji,
+            }}
+            onGenderChange={this.handleGenderChange}
+            emojiProps={{
+              native: native,
+              skin: skin,
+              gender: gender,
+              size: emojiSize,
+              set: set,
+              sheetSize: sheetSize,
+              backgroundImageFn: backgroundImageFn,
+            }}
+          />
+        )}
+
         <div
           ref={this.setScrollRef}
           className="emoji-mart-scroll"
@@ -577,6 +628,11 @@ export default class NimblePicker extends React.PureComponent {
                 id={category.id}
                 name={category.name}
                 emojis={category.emojis}
+                genderFilter={
+                  showFilter && category.id === 'people'
+                    ? genderFilters[gender]
+                    : undefined
+                }
                 perLine={perLine}
                 native={native}
                 hasStickyPosition={this.hasStickyPosition}

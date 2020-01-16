@@ -92,6 +92,40 @@
   will-change: transform; /* avoids "repaints on scroll" in mobile Chrome */
 }
 
+/* CSS for quickFilter */
+.emoji-mart-filter {
+  margin-top: 6px;
+  padding: 0 0px;
+  position: relative;
+  display: inline-block
+}
+.emoji-mart-filter .emoji-mart-gender,
+.emoji-mart-filter .emoji-mart-skin-swatches {
+  display: inline-block;
+}
+.emoji-mart-filter .emoji-mart-skin-swatches {
+  margin-left: 6px;
+}
+.emoji-mart-filter .emoji-mart-gender {
+  padding: 0;
+}
+.emoji-mart-filter .emoji-mart-gender .emoji-mart-emoji {
+  padding: 3px 6px;
+}
+.emoji-mart-filter .emoji-mart-gender .emoji-mart-skin-swatch {
+  height: unset !important;
+  opacity: 0.4;
+}
+.emoji-mart-filter .emoji-mart-gender .emoji-mart-skin-swatch:hover {
+  opacity: 0.7;
+  transition: opacity .1s ease-out;
+}
+.emoji-mart-filter .emoji-mart-gender .emoji-mart-skin-swatch.selected {
+  opacity: 1;
+  transition: opacity .2s ease-out;
+}
+
+
 .emoji-mart-search {
   margin-top: 6px;
   padding: 0 6px;

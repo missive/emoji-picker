@@ -246,7 +246,8 @@ const customEmojis = [
     emoticons: [],
     keywords: ['github'],
     imageUrl: 'https://github.githubassets.com/images/icons/emoji/octocat.png',
-    customCategory: 'GitHub'
+    customCategory: 'GitHub',
+    className: 'gh-octocat'
   },
   {
     name: 'Test Flag',
@@ -268,6 +269,8 @@ const customEmojis = [
 
 The `customCategory` string is optional. If you include it, then the custom emoji will be shown in whatever
 categories you define. If you don't include it, then there will just be one category called "Custom."
+
+The `className` string is optional too. It allows you to set an own CSS class for the custom emoji. 
 
 ## Not Found
 You can provide a custom Not Found object which will allow the appearance of the not found search results to change. In this case, we change the default 'sleuth_or_spy' emoji to Octocat when our search finds no results.

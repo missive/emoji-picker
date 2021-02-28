@@ -13,6 +13,7 @@ exports[`Renders <NotFound> component 1`] = `
     title={null}
   >
     <span
+      className=""
       style={
         Object {
           "display": "inline-block",

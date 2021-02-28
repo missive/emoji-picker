@@ -207,7 +207,9 @@ const NimbleEmoji = (props) => {
         className={className}
         {...Tag.props}
       >
-        <span style={style}>{children}</span>
+        <span style={style} className={data.className || ''}>
+          {children}
+        </span>
       </Tag.name>
     )
   }

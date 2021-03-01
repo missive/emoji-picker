@@ -54,6 +54,18 @@ const _handleLeave = (e, props) => {
   onLeave(emoji, e)
 }
 
+const _handleKeyDown = (e, props) => {
+  e.preventDefault()
+
+  if (!props.onKeyDown) {
+    return
+  }
+  var { onKeyDown } = props,
+    emoji = _getSanitizedData(props)
+
+  onKeyDown(e, emoji)
+}
+
 const _isNumeric = (value) => {
   return !isNaN(value - parseFloat(value))
 }
@@ -188,6 +200,7 @@ const NimbleEmoji = (props) => {
     Tag.name = 'button'
     Tag.props = {
       type: 'button',
+      tabIndex: '-1',
     }
   }
 
@@ -199,6 +212,8 @@ const NimbleEmoji = (props) => {
   } else {
     return (
       <Tag.name
+        id={`emoji-mart-${props.emoji}`}
+        onKeyDown={(e) => _handleKeyDown(e, props)}
         onClick={(e) => _handleClick(e, props)}
         onMouseEnter={(e) => _handleOver(e, props)}
         onMouseLeave={(e) => _handleLeave(e, props)}

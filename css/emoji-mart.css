@@ -136,7 +136,10 @@
   cursor: default;
 }
 
-.emoji-mart-category .emoji-mart-emoji:hover:before {
+.emoji-mart-category .emoji-mart-emoji:focus { outline: 0 }
+
+.emoji-mart-category .emoji-mart-emoji:hover:before, 
+.emoji-mart-category .emoji-mart-emoji:focus:before {
   z-index: 0;
   content: "";
   position: absolute;
@@ -164,15 +167,14 @@
 }
 
 .emoji-mart-category-list {
+  border-spacing: 0;
   margin: 0;
   padding: 0;
 }
 
-.emoji-mart-category-list li {
-  list-style: none;
+.emoji-mart-category-list td {
   margin: 0;
   padding: 0;
-  display: inline-block;
 }
 
 .emoji-mart-emoji {
@@ -395,6 +397,7 @@
   padding-top: 100%;
   max-width: 12px;
   border-radius: 100%;
+  cursor: pointer;
 }
 
 .emoji-mart-skin-tone-1 { background-color: #ffc93a }

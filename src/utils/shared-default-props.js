@@ -16,6 +16,8 @@ const PickerDefaultProps = {
   onClick: () => {},
   onSelect: () => {},
   onSkinChange: () => {},
+  onShowPreview: () => {},
+  onHidePreview: () => {},
   emojiSize: 24,
   perLine: 9,
   i18n: {},

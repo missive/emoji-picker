@@ -81,26 +81,39 @@ export default class Search extends React.PureComponent {
   }
 
   render() {
-    const { i18n, autoFocus } = this.props
+    const { i18n, autoFocus, emoji, pickerId } = this.props
     const { icon, isSearching, id } = this.state
     const inputId = `emoji-mart-search-${id}`
+    const descriptionId = 'emoji-mart-search-description'
 
     return (
       <section className="emoji-mart-search" aria-label={i18n.search}>
         <input
           id={inputId}
           ref={this.setRef}
-          type="search"
           onChange={this.handleChange}
           placeholder={i18n.search}
           autoFocus={autoFocus}
+          type="text"
+          placeholder="Search"
+          role="textbox"
+          aria-owns={pickerId}
+          aria-label="Search for an emoji"
+          aria-describedby={descriptionId}
+          aria-activedescendant={emoji ? `emoji-mart-${emoji.id}` : ''}
         />
         {/*
          * Use a <label> in addition to the placeholder for accessibility, but place it off-screen
          * http://www.maxability.co.in/2016/01/placeholder-attribute-and-why-it-is-not-accessible/
          */}
-        <label className="emoji-mart-sr-only" htmlFor={inputId}>
-          {i18n.search}
+        <label
+          className="emoji-mart-sr-only"
+          htmlFor={inputId}
+          id={descriptionId}
+        >
+          {i18n.search}: Use the left, right, up and down arrow keys to navigate
+          the emoji search results. Use escape key to deselect an emoji and
+          focus on search bar.
         </label>
         <button
           className="emoji-mart-search-icon"
@@ -117,6 +130,7 @@ export default class Search extends React.PureComponent {
 }
 
 Search.propTypes /* remove-proptypes */ = {
+  emoji: PropTypes.object,
   onSearch: PropTypes.func,
   maxResults: PropTypes.number,
   emojisToShowFilter: PropTypes.func,
@@ -124,6 +138,7 @@ Search.propTypes /* remove-proptypes */ = {
 }
 
 Search.defaultProps = {
+  emoji: null,
   onSearch: () => {},
   maxResults: 75,
   emojisToShowFilter: null,

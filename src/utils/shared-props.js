@@ -24,6 +24,8 @@ const PickerPropTypes = {
   onClick: PropTypes.func,
   onSelect: PropTypes.func,
   onSkinChange: PropTypes.func,
+  onShowPreview: PropTypes.func,
+  onHidePreview: PropTypes.func,
   perLine: PropTypes.number,
   emojiSize: PropTypes.number,
   i18n: PropTypes.object,

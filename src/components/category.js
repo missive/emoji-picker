@@ -13,6 +13,7 @@ export default class Category extends React.Component {
     this.data = props.data
     this.setContainerRef = this.setContainerRef.bind(this)
     this.setLabelRef = this.setLabelRef.bind(this)
+    this.setEmojiTableRef = this.setEmojiTableRef.bind(this)
   }
 
   componentDidMount() {
@@ -145,6 +146,10 @@ export default class Category extends React.Component {
     this.container = c
   }
 
+  setEmojiTableRef(c) {
+    this.emojiTableRef = c
+  }
+
   setLabelRef(c) {
     this.label = c
   }
@@ -158,6 +163,7 @@ export default class Category extends React.Component {
         i18n,
         notFound,
         notFoundEmoji,
+        perLine,
       } = this.props,
       emojis = this.getEmojis(),
       labelStyles = {},
@@ -182,6 +188,52 @@ export default class Category extends React.Component {
 
     const label = i18n.categories[id] || name
 
+    const EmojiTable = ({ emojis }) => {
+      var trs = []
+      for (let i = 0; i < emojis.length; i += perLine) {
+        trs.push(
+          <tr role="row" key={`emoji-row-${i}`}>
+            {emojis.slice(i, i + perLine).map((emoji, j) => (
+              <td
+                role="gridcell"
+                tabIndex="-1"
+                key={
+                  (emoji.short_names && emoji.short_names.join('_')) || emoji
+                }
+              >
+                {NimbleEmoji({
+                  emoji: emoji,
+                  data: this.data,
+                  ...emojiProps,
+                  onKeyDown: (e, emoji) => {
+                    emojiProps.onKeyDown(
+                      e,
+                      emoji,
+                      {
+                        category: id,
+                        row: Math.floor(i / perLine),
+                        column: j,
+                      },
+                      this.emojiTableRef,
+                    )
+                  },
+                })}
+              </td>
+            ))}
+          </tr>,
+        )
+      }
+      return (
+        <table
+          ref={this.setEmojiTableRef}
+          className="emoji-mart-category-list"
+          role="grid"
+        >
+          <tbody>{trs}</tbody>
+        </table>
+      )
+    }
+
     return (
       <section
         ref={this.setContainerRef}
@@ -203,18 +255,7 @@ export default class Category extends React.Component {
           </span>
         </div>
 
-        <ul className="emoji-mart-category-list">
-          {emojis &&
-            emojis.map((emoji) => (
-              <li
-                key={
-                  (emoji.short_names && emoji.short_names.join('_')) || emoji
-                }
-              >
-                {NimbleEmoji({ emoji: emoji, data: this.data, ...emojiProps })}
-              </li>
-            ))}
-        </ul>
+        {emojis && <EmojiTable emojis={emojis} />}
 
         {emojis && !emojis.length && (
           <NotFound

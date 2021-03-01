@@ -7,7 +7,9 @@ exports[`Renders <NotFound> component 1`] = `
   <span
     aria-label="🕵️, sleuth_or_spy"
     className="emoji-mart-emoji emoji-mart-emoji-native"
+    id="emoji-mart-sleuth_or_spy"
     onClick={[Function]}
+    onKeyDown={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
     title={null}

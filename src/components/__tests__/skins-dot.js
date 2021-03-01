@@ -1,5 +1,5 @@
 import React from 'react'
-import { shallow, configure } from 'enzyme'
+import { mount, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import SkinsDot from '../skins-dot'
 
@@ -21,7 +21,7 @@ test('click dot to expand the menu', () => {
     },
   }
 
-  const skins = shallow(<SkinsDot skin={1} onChange={onChange} i18n={i18n} />)
+  const skins = mount(<SkinsDot skin={1} onChange={onChange} i18n={i18n} />)
 
   // component should be un-expanded by default
   expect(skins.find('[aria-haspopup]').prop('aria-label')).toEqual(

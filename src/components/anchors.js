@@ -14,6 +14,7 @@ export default class Anchors extends React.PureComponent {
     }
 
     this.handleClick = this.handleClick.bind(this)
+    this.setButtonsRef = this.setButtonsRef.bind(this)
   }
 
   handleClick(e) {
@@ -23,12 +24,20 @@ export default class Anchors extends React.PureComponent {
     onAnchorClick(categories[index], index)
   }
 
+  setButtonsRef(c) {
+    this.buttons = c
+  }
+
   render() {
     var { categories, color, i18n, icons } = this.props,
       { selected } = this.state
 
     return (
-      <nav className="emoji-mart-anchors" aria-label={i18n.categorieslabel}>
+      <nav
+        className="emoji-mart-anchors"
+        aria-label={i18n.categorieslabel}
+        ref={this.setButtonsRef}
+      >
         {categories.map((category, i) => {
           var { id, name, anchor } = category,
             isSelected = name == selected

@@ -89,6 +89,15 @@ skintones: {
   6: 'Dark Skin Tone',
 },
 ```
+### Parser
+```jsx
+import { Parser } from 'emoji-mart'
+
+<Parser data="Hello there!" />
+<Parser data="Hello there! :grinning:" />
+<Parser data="Hello there! :grinning: Nice to meet you." />
+
+```
 
 **Tip:** You usually do not need to translate the categories and skin tones by youself, because this data and their translations [should be included in the Unicode CLDR](http://cldr.unicode.org/) (the ["Common Locale Data Repository"](https://en.wikipedia.org/wiki/Common_Locale_Data_Repository)). You can look them up and just take them from there.
 

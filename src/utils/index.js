@@ -225,8 +225,10 @@ function deepMerge(a, b) {
 }
 
 // https://github.com/sonicdoe/measure-scrollbar
+let cachedScrollbarWidth = -1
 function measureScrollbar() {
   if (typeof document == 'undefined') return 0
+  if (cachedScrollbarWidth !== -1) return cachedScrollbarWidth
   const div = document.createElement('div')
 
   div.style.width = '100px'
@@ -239,7 +241,7 @@ function measureScrollbar() {
   const scrollbarWidth = div.offsetWidth - div.clientWidth
   document.body.removeChild(div)
 
-  return scrollbarWidth
+  return (cachedScrollbarWidth = scrollbarWidth)
 }
 
 // Use requestIdleCallback() if available, else fall back to setTimeout().

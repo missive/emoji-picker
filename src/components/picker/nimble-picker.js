@@ -206,7 +206,7 @@ export default class NimblePicker extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    this.updateCategoriesSize()
+    this.updateCategoriesSize(false)
     this.handleScroll()
   }
 
@@ -300,10 +300,10 @@ export default class NimblePicker extends React.PureComponent {
 
       requestAnimationFrame(() => {
         if (!this.scroll) return
-        component.memoizeSize()
+        component.memoizeSize(true)
         if (maxMargin == component.maxMargin) return
 
-        this.updateCategoriesSize()
+        this.updateCategoriesSize(true)
         this.handleScrollPaint()
 
         if (this.SEARCH_CATEGORY.emojis) {
@@ -465,10 +465,19 @@ export default class NimblePicker extends React.PureComponent {
     }
   }
 
-  updateCategoriesSize() {
+  updateCategoriesSize(inAnimationFrame) {
+    if (!inAnimationFrame) {
+      if (this.updateCategoriesRequested) return
+
+      this.updateCategoriesRequested = true
+      requestAnimationFrame(() => this.updateCategoriesSize(true))
+      return
+    }
+    this.updateCategoriesRequested = false
+
     for (let i = 0, l = this.categories.length; i < l; i++) {
       let component = this.categoryRefs[`category-${i}`]
-      if (component) component.memoizeSize()
+      if (component) component.memoizeSize(true)
     }
 
     if (this.scroll) {

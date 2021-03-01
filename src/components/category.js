@@ -10,6 +10,7 @@ export default class Category extends React.Component {
   constructor(props) {
     super(props)
 
+    this.sizeMemorizePending = false
     this.data = props.data
     this.setContainerRef = this.setContainerRef.bind(this)
     this.setLabelRef = this.setLabelRef.bind(this)
@@ -19,7 +20,7 @@ export default class Category extends React.Component {
     this.margin = 0
     this.minMargin = 0
 
-    this.memoizeSize()
+    this.memoizeSize(false)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -63,7 +64,19 @@ export default class Category extends React.Component {
     return shouldUpdate
   }
 
-  memoizeSize() {
+  memoizeSize(inAnimationFrame) {
+    if (!inAnimationFrame) {
+      if (this.sizeMemorizePending) {
+        return
+      }
+
+      this.sizeMemorizePending = true
+      requestAnimationFrame(() => this.memoizeSize(true))
+      return
+    }
+    this.sizeMemorizePending = false
+
+    this.sizeMemorizePending = true
     if (!this.container) {
       // probably this is a test environment, e.g. jest
       this.top = 0

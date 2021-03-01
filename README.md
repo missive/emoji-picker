@@ -58,6 +58,7 @@ import { Picker } from 'emoji-mart'
 | **notFoundEmoji** | | `sleuth_or_spy` | The emoji shown when there are no search results |
 | **notFound** | | | [Not Found](#not-found) |
 | **icons** | | `{}` | [Custom icons](#custom-icons) |
+| **categoryHeight** | | `270px` | Category container height  |
 
 #### I18n
 ```js

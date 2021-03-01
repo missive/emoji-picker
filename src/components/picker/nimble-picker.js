@@ -534,6 +534,7 @@ export default class NimblePicker extends React.PureComponent {
       skinEmoji,
       notFound,
       notFoundEmoji,
+      categoryHeight,
     } = this.props
 
     var width = perLine * (emojiSize + 12) + 12 + 2 + measureScrollbar()
@@ -579,6 +580,7 @@ export default class NimblePicker extends React.PureComponent {
           ref={this.setScrollRef}
           className="emoji-mart-scroll"
           onScroll={this.handleScroll}
+          style={{ height: categoryHeight }}
         >
           {this.getCategories().map((category, i) => {
             return (

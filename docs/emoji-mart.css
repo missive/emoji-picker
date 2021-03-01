@@ -88,7 +88,6 @@
 .emoji-mart-scroll {
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 270px;
   padding: 0 6px 6px 6px;
   will-change: transform; /* avoids "repaints on scroll" in mobile Chrome */
 }

@@ -166,6 +166,7 @@
 .emoji-mart-category-list {
   margin: 0;
   padding: 0;
+  display: block;
 }
 
 .emoji-mart-category-list li {

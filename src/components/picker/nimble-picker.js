@@ -176,7 +176,6 @@ export default class NimblePicker extends React.PureComponent {
     if (this.categories[0]) {
       this.categories[0].first = true
     }
-
     this.categories.unshift(this.SEARCH_CATEGORY)
 
     this.setAnchorsRef = this.setAnchorsRef.bind(this)
@@ -202,6 +201,21 @@ export default class NimblePicker extends React.PureComponent {
       this.firstRenderTimeout = setTimeout(() => {
         this.setState({ firstRender: false })
       }, 60)
+    }
+
+    // Workaround for FF - requestAnimationFrame callback fails silently when window is not current context
+    this.currentWindow = window
+    if (this.props.windowContext !== null && window.requestAnimationFrame) {
+      var hasWrongWindowContext = true
+      window.requestAnimationFrame(() => {
+        hasWrongWindowContext = false
+      })
+      setTimeout(() => {
+        if (hasWrongWindowContext) {
+          this.currentWindow = this.props.windowContext
+          this.waitingForPaint = false
+        }
+      }, 0)
     }
   }
 
@@ -298,7 +312,7 @@ export default class NimblePicker extends React.PureComponent {
         component.forceUpdate()
       }
 
-      requestAnimationFrame(() => {
+      this.currentWindow.requestAnimationFrame(() => {
         if (!this.scroll) return
         component.memoizeSize()
         if (maxMargin == component.maxMargin) return
@@ -316,7 +330,7 @@ export default class NimblePicker extends React.PureComponent {
   handleScroll() {
     if (!this.waitingForPaint) {
       this.waitingForPaint = true
-      requestAnimationFrame(this.handleScrollPaint)
+      this.currentWindow.requestAnimationFrame(this.handleScrollPaint)
     }
   }
 
@@ -420,7 +434,7 @@ export default class NimblePicker extends React.PureComponent {
       this.handleSearch(null)
       this.search.clear()
 
-      requestAnimationFrame(scrollToComponent)
+      this.currentWindow.requestAnimationFrame(scrollToComponent)
     } else {
       scrollToComponent()
     }

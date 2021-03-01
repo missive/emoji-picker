@@ -118,16 +118,39 @@ const NimbleEmoji = (props) => {
     title = short_names[0]
   }
 
+  var Tag = {
+    name: 'span',
+    props: {
+      style: {},
+    },
+  }
+
+  if (props.forceSize) {
+    Tag.props.style = {
+      ...Tag.props.style,
+      verticalAlign: 'bottom',
+    }
+  }
+
   if (props.native && unified) {
     className += ' emoji-mart-emoji-native'
     style = { fontSize: props.size }
     children = nativeEmoji
-
     if (props.forceSize) {
+      Tag.props.style = {
+        ...Tag.props.style,
+        width: props.size,
+        height: props.size,
+        position: 'relative',
+        display: 'inline-block',
+        boxSizing: 'content-box',
+      }
       style.display = 'inline-block'
-      style.width = props.size
-      style.height = props.size
       style.wordBreak = 'keep-all'
+      style.position = 'absolute'
+      style.top = '50%'
+      style.left = '50%'
+      style.transform = 'translate(-50%, -50%)'
     }
   } else if (custom) {
     className += ' emoji-mart-emoji-custom'
@@ -179,14 +202,10 @@ const NimbleEmoji = (props) => {
     }
   }
 
-  var Tag = {
-    name: 'span',
-    props: {},
-  }
-
   if (props.onClick && props.useButton) {
     Tag.name = 'button'
     Tag.props = {
+      ...Tag.props,
       type: 'button',
     }
   }

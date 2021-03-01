@@ -10,6 +10,16 @@ exports[`Renders <NotFound> component 1`] = `
     onClick={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
+    style={
+      Object {
+        "boxSizing": "content-box",
+        "display": "inline-block",
+        "height": 38,
+        "position": "relative",
+        "verticalAlign": "bottom",
+        "width": 38,
+      }
+    }
     title={null}
   >
     <span
@@ -17,8 +27,10 @@ exports[`Renders <NotFound> component 1`] = `
         Object {
           "display": "inline-block",
           "fontSize": 38,
-          "height": 38,
-          "width": 38,
+          "left": "50%",
+          "position": "absolute",
+          "top": "50%",
+          "transform": "translate(-50%, -50%)",
           "wordBreak": "keep-all",
         }
       }

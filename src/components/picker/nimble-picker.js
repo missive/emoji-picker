@@ -567,6 +567,7 @@ export default class NimblePicker extends React.PureComponent {
           ref={this.setSearchRef}
           onSearch={this.handleSearch}
           data={this.data}
+          emojiIndex={this.props.emojiIndex}
           i18n={this.i18n}
           emojisToShowFilter={emojisToShowFilter}
           include={include}
@@ -660,5 +661,6 @@ export default class NimblePicker extends React.PureComponent {
 NimblePicker.propTypes /* remove-proptypes */ = {
   ...PickerPropTypes,
   data: PropTypes.object.isRequired,
+  emojiIndex: PropTypes.object,
 }
 NimblePicker.defaultProps = { ...PickerDefaultProps }

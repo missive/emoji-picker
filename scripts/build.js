@@ -1,7 +1,9 @@
 var fs = require('fs'),
-  emojiLib = require('emojilib'),
+  emojiLibKeywords = require('emojilib'),
+  emojiLibUnicode = require('unicode-emoji-json')
   inflection = require('inflection'),
   mkdirp = require('mkdirp')
+  keyBy = require('lodash').keyBy
 
 var { compress } = require('../dist/utils/data')
 
@@ -18,6 +20,8 @@ var categories = [
 ]
 
 var sets = ['apple', 'facebook', 'google', 'twitter']
+
+var emojiLibBySlug = selectEmojisBySlug(emojiLibKeywords, emojiLibUnicode)
 
 module.exports = (options) => {
   delete require.cache[require.resolve('emoji-datasource')]
@@ -81,11 +85,11 @@ module.exports = (options) => {
     datum.text = datum.text || ''
     delete datum.texts
 
-    if (emojiLib.lib[datum.short_name]) {
-      datum.keywords = emojiLib.lib[datum.short_name].keywords
+    if (emojiLibBySlug[datum.short_name]) {
+      datum.keywords = emojiLibBySlug[datum.short_name].keywords
     }
 
-    if (datum.category != 'Skin Tones') {
+    if (datum.category != 'Skin Tones' && datum.category != 'Component') {
       categoryIndex = categoriesIndex[category]
       data.categories[categoryIndex].emojis.push(datum.short_name)
       data.emojis[datum.short_name] = datum
@@ -134,4 +138,13 @@ module.exports = (options) => {
   fs.writeFile(options.output, JSON.stringify(data), (err) => {
     if (err) throw err
   })
+}
+
+function selectEmojisBySlug(keywordSet, data) {
+  // conversion from v2 to v3 as described in https://github.com/muan/emojilib#migrating-from-2x
+  for (const emoji in data) {
+    data[emoji]['keywords'] = keywordSet[emoji]
+  }
+
+  return keyBy(data, 'slug')
 }

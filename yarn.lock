@@ -3991,20 +3991,20 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-emoji-datasource@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/emoji-datasource/-/emoji-datasource-5.0.1.tgz#31eaaff7caa6640929327b4f4ff66f2bf313df0a"
-  integrity sha512-RXokuCv4o8RFLiigN1skAdZwJuJWqtBvcK3GVKpvAL/7BeH95enmKsli7cG8YZ85RTjyEe3+GAdpJJOV43KLKQ==
+emoji-datasource@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/emoji-datasource/-/emoji-datasource-7.0.1.tgz#4824a63ee3a670bacb9c3cded4c68bfa3859144d"
+  integrity sha512-P6P3qwrvP6Ew5kapt3sWTTtra8jFqbcqgpAfO9OqNm5KINjenLG8/uOqusIq4FAF3OkeWsCYbD3rdQGV2nK0+g==
 
 emoji-regex@^7.0.1:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-7.0.3.tgz#933a04052860c85e83c122479c4748a8e4c72156"
   integrity sha512-CwBLREIQ7LvYFB0WyRvwhq5N5qPhc6PMjD6bYggFlI5YyDgl+0vxq5VHbMOFqLg7hfWzmu8T5Z1QofhmTIhItA==
 
-emojilib@^2.2.1:
-  version "2.2.9"
-  resolved "https://registry.yarnpkg.com/emojilib/-/emojilib-2.2.9.tgz#ec5722689fc148f56422c14b0dc16a901d446b75"
-  integrity sha512-RbYMz3G8OFBZYsqHQp8kiM/Hsg/0bSRWG1iRPqvQ04s4RUQH+iBLFjybSM6fv2rV/vQrywOEL5m31BjnfyDUlw==
+emojilib@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/emojilib/-/emojilib-3.0.2.tgz#7732d827883be34db8353de25fb1380184255e51"
+  integrity sha512-ili5TJi/YQusxLfhUk/TVx0Va03UMrf/OkqkedtOQEscBTnToeitB8O/kJkZxkfRQtqVE7wuN0PvMW6oWUnZEQ==
 
 emojis-list@^2.0.0:
   version "2.1.0"
@@ -6384,6 +6384,11 @@ lodash@>4.17.4, lodash@^4.0.1, lodash@^4.15.0, lodash@^4.17.0, lodash@^4.17.11, 
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 longest@^1.0.1:
   version "1.0.1"
@@ -9672,6 +9677,11 @@ unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-1.0.4.tgz#2619800c4c825800efdd8343af7dd9933cbe2818"
   integrity sha512-jDrNnXWHd4oHiTZnx/ZG7gtUTVp+gCcTTKr8L0HjlwphROEW3+Him+IpvC+xcJEFegapiMZyZe02CyuOnRmbnQ==
+
+unicode-emoji-json@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/unicode-emoji-json/-/unicode-emoji-json-0.2.1.tgz#ebe57f39ecbc8cc3508063e5c03a20e1096fa234"
+  integrity sha512-4X736t5oVw33kPIPo9F0UUQqUY2gEtAwVFFnE7LXfExhPeWO64FahKw6yFb6gps7Ex7cat5LJPemVEzdk8pWug==
 
 unicode-match-property-ecmascript@^1.0.4:
   version "1.0.4"

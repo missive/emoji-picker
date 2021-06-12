@@ -40,12 +40,13 @@
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.0",
     "babel-plugin-transform-define": "^2.0.0",
-    "emoji-datasource": "5.0.1",
-    "emojilib": "^2.2.1",
+    "emoji-datasource": "^7.0.1",
+    "emojilib": "^3.0.2",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
     "inflection": "1.10.0",
     "jest": "^24.9.0",
+    "lodash": "^4.17.21",
     "mkdirp": "0.5.1",
     "prettier": "^1.16.4",
     "react": "^16.0.0",
@@ -53,6 +54,7 @@
     "react-test-renderer": "^16.8.4",
     "rimraf": "2.5.2",
     "size-limit": "^0.11.4",
+    "unicode-emoji-json": "^0.2.1",
     "webpack": "^3.6.0"
   },
   "scripts": {

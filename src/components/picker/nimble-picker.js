@@ -1,18 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { FixedSizeGrid as Grid } from 'react-window'
 
 import * as icons from '../../svgs'
 import store from '../../utils/store'
 import frequently from '../../utils/frequently'
-import { deepMerge, measureScrollbar, getSanitizedData } from '../../utils'
+import {
+  deepMerge,
+  measureScrollbar,
+  getSanitizedData,
+  getData,
+} from '../../utils'
 import { uncompress } from '../../utils/data'
 import { PickerPropTypes } from '../../utils/shared-props'
 
 import Anchors from '../anchors'
-import Category from '../category'
+import renderEmoji from '../renderEmoji'
 import Preview from '../preview'
 import Search from '../search'
 import { PickerDefaultProps } from '../../utils/shared-default-props'
+import NotFound from '../not-found'
+
+const gridRef = React.createRef()
 
 const I18N = {
   search: 'Search',
@@ -67,6 +76,7 @@ export default class NimblePicker extends React.PureComponent {
     this.state = { firstRender: true }
 
     this.categories = []
+    this.activeCategory = {}
     let allCategories = [].concat(this.data.categories)
 
     if (props.custom.length > 0) {
@@ -183,8 +193,6 @@ export default class NimblePicker extends React.PureComponent {
     this.handleAnchorClick = this.handleAnchorClick.bind(this)
     this.setSearchRef = this.setSearchRef.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
-    this.setScrollRef = this.setScrollRef.bind(this)
-    this.handleScroll = this.handleScroll.bind(this)
     this.handleScrollPaint = this.handleScrollPaint.bind(this)
     this.handleEmojiOver = this.handleEmojiOver.bind(this)
     this.handleEmojiLeave = this.handleEmojiLeave.bind(this)
@@ -203,11 +211,6 @@ export default class NimblePicker extends React.PureComponent {
         this.setState({ firstRender: false })
       }, 60)
     }
-  }
-
-  componentDidUpdate() {
-    this.updateCategoriesSize()
-    this.handleScroll()
   }
 
   componentWillUnmount() {
@@ -291,129 +294,81 @@ export default class NimblePicker extends React.PureComponent {
     this.props.onSelect(emoji)
     if (!this.hideRecent && !this.props.recent) frequently.add(emoji)
 
-    var component = this.categoryRefs['category-1']
-    if (component) {
-      let maxMargin = component.maxMargin
-      if (this.props.enableFrequentEmojiSort) {
-        component.forceUpdate()
-      }
-
-      requestAnimationFrame(() => {
-        if (!this.scroll) return
-        component.memoizeSize()
-        if (maxMargin == component.maxMargin) return
-
-        this.updateCategoriesSize()
-        this.handleScrollPaint()
-
-        if (this.SEARCH_CATEGORY.emojis) {
-          component.updateDisplay('none')
-        }
-      })
-    }
+    // var component = this.categoryRefs['category-1']
+    // if (component) {
+    //   let maxMargin = component.maxMargin
+    //   if (this.props.enableFrequentEmojiSort) {
+    //     component.forceUpdate()
+    //   }
+    //
+    //   requestAnimationFrame(() => {
+    //     if (!this.scroll) return
+    //     component.memoizeSize()
+    //     if (maxMargin == component.maxMargin) return
+    //
+    //     this.updateCategoriesSize()
+    //     this.handleScrollPaint()
+    //
+    //     if (this.SEARCH_CATEGORY.emojis) {
+    //       component.updateDisplay('none')
+    //     }
+    //   })
+    // }
   }
 
-  handleScroll() {
-    if (!this.waitingForPaint) {
-      this.waitingForPaint = true
-      requestAnimationFrame(this.handleScrollPaint)
-    }
-  }
+  handleScrollPaint(titleIndexes) {
+    return ({ scrollTop }) => {
+      let activeCategory = null
 
-  handleScrollPaint() {
-    this.waitingForPaint = false
+      if (this.SEARCH_CATEGORY.emojis) {
+        activeCategory = this.SEARCH_CATEGORY
+      } else {
+        const scrolledItem = Math.ceil(scrollTop / 36)
 
-    if (!this.scroll) {
-      return
-    }
+        Object.keys(titleIndexes)
+          .sort((a, b) => titleIndexes[a].row - titleIndexes[b].row)
+          .some((key, index) => {
+            const category = this.categories[index + 1]
 
-    let activeCategory = null
-
-    if (this.SEARCH_CATEGORY.emojis) {
-      activeCategory = this.SEARCH_CATEGORY
-    } else {
-      var target = this.scroll,
-        scrollTop = target.scrollTop,
-        scrollingDown = scrollTop > (this.scrollTop || 0),
-        minTop = 0
-
-      for (let i = 0, l = this.categories.length; i < l; i++) {
-        let ii = scrollingDown ? this.categories.length - 1 - i : i,
-          category = this.categories[ii],
-          component = this.categoryRefs[`category-${ii}`]
-
-        if (component) {
-          let active = component.handleScroll(scrollTop)
-
-          if (!minTop || component.top < minTop) {
-            if (component.top > 0) {
-              minTop = component.top
+            if (
+              titleIndexes[category.id] &&
+              titleIndexes[category.id].row < scrolledItem + 2
+            ) {
+              activeCategory = category
             }
-          }
+          })
+      }
 
-          if (active && !activeCategory) {
-            activeCategory = category
-          }
+      if (activeCategory) {
+        let { anchors } = this,
+          { name: categoryName } = activeCategory
+
+        if (anchors.state.selected !== categoryName) {
+          anchors.setState({ selected: categoryName })
         }
       }
 
-      if (scrollTop < minTop) {
-        activeCategory = this.categories.filter(
-          (category) => !(category.anchor === false),
-        )[0]
-      } else if (scrollTop + this.clientHeight >= this.scrollHeight) {
-        activeCategory = this.categories[this.categories.length - 1]
-      }
+      this.activeCategory = activeCategory
+      this.scrollTop = scrollTop
     }
-
-    if (activeCategory) {
-      let { anchors } = this,
-        { name: categoryName } = activeCategory
-
-      if (anchors.state.selected != categoryName) {
-        anchors.setState({ selected: categoryName })
-      }
-    }
-
-    this.scrollTop = scrollTop
   }
 
   handleSearch(emojis) {
     this.SEARCH_CATEGORY.emojis = emojis
-
-    for (let i = 0, l = this.categories.length; i < l; i++) {
-      let component = this.categoryRefs[`category-${i}`]
-
-      if (component && component.props.name != 'Search') {
-        let display = emojis ? 'none' : 'inherit'
-        component.updateDisplay(display)
-      }
-    }
-
     this.forceUpdate()
-    if (this.scroll) {
-      this.scroll.scrollTop = 0
-    }
-    this.handleScroll()
+
+    gridRef.current.scrollToItem({
+      columnIndex: 0,
+      rowIndex: 0,
+    })
   }
 
-  handleAnchorClick(category, i) {
-    var component = this.categoryRefs[`category-${i}`],
-      { scroll, anchors } = this,
-      scrollToComponent = null
-
-    scrollToComponent = () => {
-      if (component) {
-        let { top } = component
-
-        if (category.first) {
-          top = 0
-        } else {
-          top += 1
-        }
-
-        scroll.scrollTop = top
-      }
+  handleAnchorClick(category, i, itemPosition) {
+    const scrollToComponent = () => {
+      gridRef.current.scrollToItem({
+        columnIndex: itemPosition.col,
+        rowIndex: itemPosition.row + 6,
+      })
     }
 
     if (this.SEARCH_CATEGORY.emojis) {
@@ -465,19 +420,6 @@ export default class NimblePicker extends React.PureComponent {
     }
   }
 
-  updateCategoriesSize() {
-    for (let i = 0, l = this.categories.length; i < l; i++) {
-      let component = this.categoryRefs[`category-${i}`]
-      if (component) component.memoizeSize()
-    }
-
-    if (this.scroll) {
-      let target = this.scroll
-      this.scrollHeight = target.scrollHeight
-      this.clientHeight = target.clientHeight
-    }
-  }
-
   getCategories() {
     return this.state.firstRender
       ? this.categories.slice(0, 3)
@@ -494,18 +436,6 @@ export default class NimblePicker extends React.PureComponent {
 
   setPreviewRef(c) {
     this.preview = c
-  }
-
-  setScrollRef(c) {
-    this.scroll = c
-  }
-
-  setCategoryRef(name, c) {
-    if (!this.categoryRefs) {
-      this.categoryRefs = {}
-    }
-
-    this.categoryRefs[name] = c
   }
 
   render() {
@@ -544,6 +474,91 @@ export default class NimblePicker extends React.PureComponent {
       store.get('skin') ||
       this.props.defaultSkin
 
+    const emojiProps = {
+      native: native,
+      skin: skin,
+      size: emojiSize,
+      set: set,
+      sheetSize: sheetSize,
+      sheetColumns: sheetColumns,
+      sheetRows: sheetRows,
+      forceSize: native,
+      tooltip: emojiTooltip,
+      backgroundImageFn: backgroundImageFn,
+      useButton: useButton,
+      onOver: this.handleEmojiOver,
+      onLeave: this.handleEmojiLeave,
+      onClick: this.handleEmojiClick,
+    }
+
+    let allEmojis = []
+    const titleIndexes = {}
+    this.getCategories().map((category, i) => {
+      let emojis = category.emojis || []
+
+      if (Array.isArray(this.SEARCH_CATEGORY.emojis)) {
+        if (category.name !== 'Search') return null
+      } else if (category.name === 'Search') {
+        return null
+      }
+
+      const recent =
+        category.id === this.RECENT_CATEGORY.id ? recent : undefined
+      const custom =
+        category.id === this.RECENT_CATEGORY.id ? this.CUSTOM : undefined
+
+      if (category.name === 'Recent') {
+        let frequentlyUsed = recent || frequently.get(perLine)
+
+        if (frequentlyUsed.length) {
+          emojis = frequentlyUsed
+            .map((id) => {
+              const emoji = custom.filter((e) => e.id === id)[0]
+              if (emoji) {
+                return emoji
+              }
+
+              return id
+            })
+            .filter((id) => !!getData(id, null, null, this.data))
+        }
+
+        if (emojis.length === 0 && frequentlyUsed.length > 0) {
+          return null
+        }
+      } else if (category.name === 'Search') {
+        emojis = this.SEARCH_CATEGORY.emojis
+      }
+
+      if (emojis) {
+        emojis = emojis.slice(0)
+      }
+
+      const catObj = { cat_id: category.id, cat_name: category.name }
+      titleIndexes[catObj.cat_id] = {
+        ...catObj,
+        row: Math.ceil(allEmojis.length / perLine),
+        col: allEmojis.length % perLine,
+      }
+      const missing = perLine - (allEmojis.length % perLine)
+      const makeGap = (count) =>
+        Array.from({
+          length: count,
+        })
+
+      allEmojis = [
+        ...allEmojis,
+        ...makeGap(allEmojis.length === 0 ? 0 : missing),
+        catObj,
+        ...makeGap(perLine - 1),
+        ...emojis,
+      ]
+    })
+
+    const rowCount = Array.isArray(allEmojis)
+      ? Math.ceil(allEmojis.length / perLine)
+      : 0
+
     return (
       <section
         style={{ width: width, ...style }}
@@ -560,6 +575,7 @@ export default class NimblePicker extends React.PureComponent {
             categories={this.categories}
             onAnchorClick={this.handleAnchorClick}
             icons={this.icons}
+            titleIndexes={titleIndexes}
           />
         </div>
 
@@ -575,53 +591,37 @@ export default class NimblePicker extends React.PureComponent {
           autoFocus={autoFocus}
         />
 
-        <div
-          ref={this.setScrollRef}
-          className="emoji-mart-scroll"
-          onScroll={this.handleScroll}
-        >
-          {this.getCategories().map((category, i) => {
-            return (
-              <Category
-                ref={this.setCategoryRef.bind(this, `category-${i}`)}
-                key={category.name}
-                id={category.id}
-                name={category.name}
-                emojis={category.emojis}
-                perLine={perLine}
-                native={native}
-                hasStickyPosition={this.hasStickyPosition}
-                data={this.data}
+        <div className="emoji-mart-scroll">
+          <Grid
+            ref={gridRef}
+            columnCount={perLine}
+            columnWidth={36}
+            rowHeight={36}
+            height={264}
+            width={perLine * 36 + 10}
+            rowCount={rowCount}
+            onScroll={this.handleScrollPaint(titleIndexes)}
+          >
+            {renderEmoji({
+              activeCategory: this.activeCategory,
+              i18n: this.i18n,
+              data: this.data,
+              emojis: allEmojis || [],
+              perLine,
+              emojiProps,
+            })}
+          </Grid>
+
+          {allEmojis &&
+            !allEmojis.filter(a => a && !a.cat_id).length && (
+              <NotFound
                 i18n={this.i18n}
-                recent={
-                  category.id == this.RECENT_CATEGORY.id ? recent : undefined
-                }
-                custom={
-                  category.id == this.RECENT_CATEGORY.id
-                    ? this.CUSTOM
-                    : undefined
-                }
-                emojiProps={{
-                  native: native,
-                  skin: skin,
-                  size: emojiSize,
-                  set: set,
-                  sheetSize: sheetSize,
-                  sheetColumns: sheetColumns,
-                  sheetRows: sheetRows,
-                  forceSize: native,
-                  tooltip: emojiTooltip,
-                  backgroundImageFn: backgroundImageFn,
-                  useButton: useButton,
-                  onOver: this.handleEmojiOver,
-                  onLeave: this.handleEmojiLeave,
-                  onClick: this.handleEmojiClick,
-                }}
                 notFound={notFound}
                 notFoundEmoji={notFoundEmoji}
+                data={this.data}
+                emojiProps={emojiProps}
               />
-            )
-          })}
+            )}
         </div>
 
         {(showPreview || showSkinTones) && (

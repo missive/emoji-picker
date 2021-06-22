@@ -4,6 +4,9 @@
   line-height: 1.15;
 }
 
+.emoji-mart ::marker {
+  content: none;
+}
 .emoji-mart {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   font-size: 16px;
@@ -86,7 +89,6 @@
 }
 
 .emoji-mart-scroll {
-  overflow-y: scroll;
   overflow-x: hidden;
   height: 270px;
   padding: 0 6px 6px 6px;
@@ -129,14 +131,14 @@
   background: none;
 }
 
-.emoji-mart-category .emoji-mart-emoji span {
+.emoji-mart-emoji span {
   z-index: 1;
   position: relative;
   text-align: center;
   cursor: default;
 }
 
-.emoji-mart-category .emoji-mart-emoji:hover:before {
+.emoji-mart-emoji:hover:before {
   z-index: 0;
   content: "";
   position: absolute;
@@ -195,6 +197,10 @@
   text-align: center;
   padding-top: 70px;
   color: #858585;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .emoji-mart-no-results-img {
   display: block;
@@ -440,7 +446,7 @@
   fill: #fff;
 }
 
-.emoji-mart-dark .emoji-mart-category .emoji-mart-emoji:hover:before {
+.emoji-mart-dark .emoji-mart-emoji:hover:before {
   background-color: #444;
 }
 

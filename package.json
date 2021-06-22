@@ -1,6 +1,6 @@
 {
-  "name": "emoji-mart",
-  "version": "3.0.1",
+  "name": "emoji-mart-virtualized",
+  "version": "3.0.39",
   "description": "Customizable Slack-like emoji picker for React",
   "main": "dist/index.js",
   "module": "dist-es/index.js",
@@ -21,7 +21,8 @@
   "homepage": "https://github.com/missive/emoji-mart",
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "prop-types": "^15.6.0"
+    "prop-types": "^15.6.0",
+    "react-window": "^1.8.6"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0-0 || ^16.0.0 || ^17.0.0"
